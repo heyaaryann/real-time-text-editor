@@ -1,0 +1,6 @@
+we are using next.js to build the project 
+shadcn(is uded for building a custom component library or design system for web applications) for designing all the things beacuse it is very easy to implement 
+
+#####
+we commit changes in app.page.tsx file 
+and we have to add a export default in the bottom
