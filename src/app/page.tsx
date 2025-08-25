@@ -1,13 +1,15 @@
-import { Button } from "@/components/ui/button";
-const Home =()=>{
-  return(
-    <div className = "flex min-h-screen items-center justify-center bg-red-500">
-      <Button variant="primary">
-        Click me
-        </Button>
-        
+import { LineSquiggle } from "lucide-react";
+import Link from "next/link";  
+
+const Home = () => {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      click{" "}
+      <Link href="/documents/123">
+        <span className="text-blue-500 underline">&nbsp;here&nbsp;</span>
+      </Link>to go to document id
     </div>
   );
-}
+};
+
 export default Home;
-//we have to use erport default at the end , if we doesnt it will show an error

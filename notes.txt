@@ -4,3 +4,7 @@ shadcn(is uded for building a custom component library or design system for web 
 #####
 we commit changes in app.page.tsx file 
 and we have to add a export default in the bottom
+
+i have watched the yt video till 46.57 and i am not able to connect the click here to the documents page 
+
+https://www.youtube.com/watch?v=gq2bbDmSokU here is the yt link i am using 
