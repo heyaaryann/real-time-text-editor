@@ -1,0 +1,12 @@
+
+
+9th sep 2025
+1.we are using tiptap docs for making our file look like word file and in that "STARTERKIT"is used to style bold, italic 
+
+2.we have added the bullet([] square brackets to be used), heading(# to be used) , 
+tasklist(- dash to be used ), 
+task item points style in the global css from tiptap docs website
+
+i have completed the video till 1.26.27
+3. 
+
