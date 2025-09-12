@@ -13,7 +13,6 @@ import ImageResize from 'tiptap-extension-resize-image';
 import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
 import TextAlign from '@tiptap/extension-text-align';
-import Link from '@tiptap/extension-link';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import TextStyle from '@tiptap/extension-text-style';
 
@@ -22,7 +21,7 @@ export const Editor = () => {
     editorProps: {
       attributes: {
         style: "padding-left:56px; padding-right:56px;",
-        class: "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
+        class: "tiptap focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },
     },
     extensions: [
@@ -38,11 +37,16 @@ export const Editor = () => {
       Underline,
       Strike,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Link,
       HorizontalRule,
-      TextStyle
+      TextStyle,
     ],
+    content: `
+      
+      <pre><code>console.log("Code styling works");</code></pre>
+    `,
   });
+
+  if (!editor) return null;
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -54,48 +58,119 @@ export const Editor = () => {
 
       {/* Toolbar Section */}
       <div className="toolbar mt-5">
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleBold().run()}>Bold</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleItalic().run()}>Italic</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleUnderline().run()}>Underline</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleStrike().run()}>Strikethrough</button>
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'active' : ''}
+        >
+          Bold
+        </button>
 
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'active' : ''}
+        >
+          Italic
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={editor.isActive('underline') ? 'active' : ''}
+        >
+          Underline
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={editor.isActive('strike') ? 'active' : ''}
+        >
+          Strikethrough
+        </button>
+
+        {/* Headings */}
         <select
-          disabled={!editor}
           defaultValue="paragraph"
           onChange={(e) => {
             const value = e.target.value;
             if (value === 'paragraph') {
-              editor?.chain().focus().setParagraph().run();
+              editor.chain().focus().setParagraph().run();
             } else {
               const level = parseInt(value) as 1 | 2 | 3 | 4 | 5 | 6;
-              editor?.chain().focus().toggleHeading({ level }).run();
+              editor.chain().focus().toggleHeading({ level }).run();
             }
           }}
         >
-          <option value="paragraph">Paragraph</option>
+          <option value="paragraph">Heading</option>
           <option value="1">H1</option>
           <option value="2">H2</option>
           <option value="3">H3</option>
           <option value="4">H4</option>
         </select>
 
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleBulletList().run()}>Bullet List</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleOrderedList().run()}>Numbered List</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().toggleTaskList().run()}>Task List</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>Table</button>
+        {/* Lists */}
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={editor.isActive('bulletList') ? 'active' : ''}
+        >
+          Bullet List
+        </button>
 
-        <button disabled={!editor} onClick={() => editor?.chain().focus().setTextAlign('left').run()}>Align Left</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().setTextAlign('center').run()}>Align Center</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().setTextAlign('right').run()}>Align Right</button>
-        <button disabled={!editor} onClick={() => editor?.chain().focus().setTextAlign('justify').run()}>Justify</button>
+        <button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={editor.isActive('orderedList') ? 'active' : ''}
+        >
+          Numbered List
+        </button>
 
-        <button disabled={!editor} onClick={() => editor?.chain().focus().setHorizontalRule().run()}>Horizontal Rule</button>
-        
+        <button
+          onClick={() => editor.chain().focus().toggleTaskList().run()}
+          className={editor.isActive('taskList') ? 'active' : ''}
+        >
+          Task List
+        </button>
 
-        <button disabled={!editor} onClick={() => {
-          const url = window.prompt('Enter URL');
-          if (url) editor.chain().focus().setLink({ href: url }).run();
-        }}>Insert Link</button>
+        {/* Table */}
+        <button
+          onClick={() =>
+            editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+          }
+        >
+          Insert Table
+        </button>
+
+        {/* Alignment */}
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={editor.isActive({ textAlign: 'left' }) ? 'active' : ''}
+        >
+          Align Left
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={editor.isActive({ textAlign: 'center' }) ? 'active' : ''}
+        >
+          Align Center
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={editor.isActive({ textAlign: 'right' }) ? 'active' : ''}
+        >
+          Align Right
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          className={editor.isActive({ textAlign: 'justify' }) ? 'active' : ''}
+        >
+          Justify
+        </button>
+
+        {/* Insertions */}
+        <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+          Horizontal Rule
+        </button>
+
       </div>
 
       {/* Editor Area */}
