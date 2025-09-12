@@ -42,6 +42,7 @@ body {
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -87,166 +88,118 @@ body {
   }
 }
 
-.tiptap{
+/* TipTap editor */
+.tiptap {
+  :first-child {
+    margin-top: 0;
+  }
 
-  /*image-specific styling*/
+  /* Images */
   img {
     display: block;
     height: auto;
     margin: 1.5rem 0;
     max-width: 100%;
-
-    &.ProseMirror-selectednode {
-      outline: 3px solid var(--purple);
-    }
   }
 
-  /* Table-specific styling */
+  /* Table styling */
   table {
     border-collapse: collapse;
-    margin: 0;
-    overflow: hidden;
-    table-layout: fixed;
-    width: 100%;
-
-    td,
-    th {
-      border: 1px solid black;
-      box-sizing: border-box;
-      min-width: 1em;
-      padding: 6px 8px;
-      position: relative;
-      vertical-align: top;
-
-      > * {
-        margin-bottom: 0;
-      }
-    }
-
-    th {
-      background-color: #C7C7C7;
-      font-weight: bold;
-      text-align: left;
-    }
-
-    .selectedCell:after {
-      background: #95959b;
-      content: '';
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      pointer-events: none;
-      position: absolute;
-      z-index: 2;
-    }
-
-    .column-resize-handle {
-      background-color: var(--primary);
-      bottom: -2px;
-      pointer-events: none;
-      position: absolute;
-      right: -2px;
-      top: 0;
-      width: 4px;
-    }
-  }
-
-  .tableWrapper {
     margin: 1.5rem 0;
-    overflow-x: auto;
+    width: 100%;
+    table-layout: fixed;
   }
 
-  &.resize-cursor {
-    cursor: ew-resize;
-    cursor: col-resize;
+  td, th {
+    border: 1px solid black;
+    padding: 6px 8px;
   }
 
-  /* Heading styles */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    line-height: 1.1;
-    margin-top: 2.5rem;
-    text-wrap: pretty;
+  th {
+    background-color: #C7C7C7;
+    font-weight: bold;
   }
 
-  h1,
-  h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
+  .selectedCell::after {
+    content: '';
+    background: #95959b;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
   }
 
-  h1 {
-    font-size: 1.4rem;
-  }
+  /* Headings */
+  h1 { font-size: 1.4rem; margin: 3.5rem 0 1.5rem 0; }
+  h2 { font-size: 1.2rem; margin: 3.5rem 0 1.5rem 0; }
+  h3 { font-size: 1.1rem; margin: 2.5rem 0; }
+  h4, h5, h6 { font-size: 1rem; margin: 2.5rem 0; }
 
-  h2 {
-    font-size: 1.2rem;
-  }
+  /* Lists */
+  ul, ol { padding-left: 1rem; margin: 1.25rem 0; }
+  ul li { list-style-type: disc; }
+  ol li { list-style-type: decimal; }
 
-  h3 {
-    font-size: 1.1rem;
-  }
-
-  h4,
-  h5,
-  h6 {
-    font-size: 1rem;
-  }
-
-  /*list styles , bullet points */
-  ul,
-  ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
-  }
-  ul li{
-    list-style-type: disc;
-    p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
-    }
-  }
-  ol li {
-    list-style-type: decimal;
-
-    p{
-      margin-top:0.25em;
-      margin-bottom: 0.25em;
-    }
-  }
-
-  /* Task list specific styles */
+  /* Task List */
   ul[data-type='taskList'] {
     list-style: none;
     margin-left: 0;
     padding: 0;
-
-    li {
-      align-items: flex-start;
-      display: flex;
-
-      > label {
-        flex: 0 0 auto;
-        margin-right: 0.5rem;
-        user-select: none;
-      }
-
-      > div {
-        flex: 1 1 auto;
-      }
-    }
-
-    input[type='checkbox'] {
-      cursor: pointer;
-    }
-
-    ul[data-type='taskList'] {
-      margin: 0;
-    }
   }
+  ul[data-type='taskList'] li {
+    display: flex;
+    align-items: flex-start;
+  }
+  ul[data-type='taskList'] li > label {
+    margin-right: 0.5rem;
+    user-select: none;
+  }
+  ul[data-type='taskList'] li input[type='checkbox'] {
+    cursor: pointer;
+  }
+}
+
+/* Toolbar styling */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f3f4f6; /* gray-100 */
+  border-bottom: 1px solid #d1d5db;
+}
+
+/* Toolbar buttons */
+.toolbar button,
+.toolbar select {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Hover */
+.toolbar button:hover,
+.toolbar select:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Disabled */
+.toolbar button:disabled,
+.toolbar select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Active button */
+.toolbar button.active {
+  background-color: #3b82f6; /* blue */
+  color: white;
+  border-color: #2563eb;
 }
