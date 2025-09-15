@@ -1991,7 +1991,7 @@ body {
 
 /* Active button */
 .toolbar button.active {
-  background-color: #eb7b25; /* Tailwind blue-600 */
+  background-color: #000000; /* Tailwind blue-600 */
   color: white;
   border-radius: 0.375rem; /* rounded-md */
   padding: 0.25rem 0.75rem;

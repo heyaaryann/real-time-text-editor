@@ -166,7 +166,7 @@ export const Editor = () => {
           Justify
         </button>
 
-        {/* Insertions */}
+        {/* Insertions of horizontal Rule*/}
         <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
           Horizontal Rule
         </button>
