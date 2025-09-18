@@ -8,7 +8,6 @@ tasklist(- dash to be used ),
 task item points style in the global css from tiptap docs website
 
 i have completed the video till 1.26.27
+
 3. 
-
-i havent done anything today till now i am thinking of not doing also 
-
+hello..

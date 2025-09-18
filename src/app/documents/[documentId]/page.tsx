@@ -1,4 +1,5 @@
 import { Editor } from "./editor";
+import { Toolbar } from "./toolbar";
 
 
 interface DocumentIdPageProps {
@@ -8,8 +9,9 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
 
   return (
-    <div className="min-h-screen bg-[#FAFBFD] flex flex-col items-center pt-10">
+    <div className="min-h-screen bg-[#FAFBFD] ">
       
+      <Toolbar/>
       <Editor/>
     </div>
   );
