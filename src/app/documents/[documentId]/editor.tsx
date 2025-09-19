@@ -36,7 +36,7 @@ ImageResize],
           <tbody>
             <tr>
               <th>Name</th>
-              <th colSpan="3">Description</th>
+              <th colSpan={3}>Description</th>
             </tr>
             <tr>
               <td>Aryan goyal</td>

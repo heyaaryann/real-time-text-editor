@@ -1,7 +1,8 @@
+import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 
 interface ToolbarButtonProps{
-    Onclick?:()=>void;
+    onClick?:()=>void;
     isActive?:boolean;
     icon:LucideIcon;
 
@@ -10,11 +11,21 @@ interface ToolbarButtonProps{
 
 const ToolbarButton = ({
 
-    Onclick,
+    onClick,
     isActive,
     icon:Icon,
 
 }:ToolbarButtonProps) => {
+
+    return(
+        <button
+        onClick={onClick}
+        className={cn("text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
+            isActive &&"bg-neutral-200/80"
+        )}>
+            <Icon className = "size-4"/>
+        </button>
+    )
     
 }
  
@@ -22,7 +33,7 @@ const ToolbarButton = ({
 
 export const Toolbar = () =>{
     return (
-        <div className="bg-[#f1f4f9] px-2.5 py-0.5 rounded-[24px] min-h-[40px] flex item-centre gap-x-0.5 overflow-x">
+        <div className="bg-[#c6c7c7] px-2.5 py-0.5 rounded-[24px] min-h-[40px] flex item-centre gap-x-0.5 overflow-x">
             Toolbar
         </div>
     );
