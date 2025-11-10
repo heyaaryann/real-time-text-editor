@@ -89,7 +89,7 @@ body {
   /* Paragraph spacing */
   p { margin: 1rem 0; }
 
-  /* Lists */
+  /* List style */
   ul, ol {
     padding-left: 1rem;
     margin: 1.25rem 0;
