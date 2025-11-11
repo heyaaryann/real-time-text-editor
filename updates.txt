@@ -16,3 +16,6 @@ hello..
 
 10 nov 2025
 here i am working on the toolbar now to make it look good and fully working
+
+11 nov 2025 
+1. we are trying that the undo button that we have created working so we installed zustand

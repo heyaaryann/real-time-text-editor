@@ -1320,9 +1320,9 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(250 251 253 / var(--tw-bg-opacity, 1));
 }
-.bg-\[\#c6c7c7\] {
+.bg-\[\#f1f4f9\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(198 199 199 / var(--tw-bg-opacity, 1));
+  background-color: rgb(241 244 249 / var(--tw-bg-opacity, 1));
 }
 .bg-\[--color-bg\] {
   background-color: var(--color-bg);
@@ -1392,24 +1392,6 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-.bg-\[\#f1f\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 17 255 / var(--tw-bg-opacity, 1));
-}
-.bg-\[\#f1f4\] {
-  background-color: #f1f4;
-}
-.bg-\[\#f1f4f5\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 244 245 / var(--tw-bg-opacity, 1));
-}
-.bg-\[\#f1f4f\] {
-  background-color: #f1f4f;
-}
-.bg-\[\#f1f4f9\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 244 249 / var(--tw-bg-opacity, 1));
 }
 .fill-current {
   fill: currentColor;
