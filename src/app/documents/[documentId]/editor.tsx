@@ -14,9 +14,22 @@ import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
 import TextAlign from '@tiptap/extension-text-align';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import { useEditorStore } from '@/store/use-editor-store';
 
 export const Editor = () => {
+
+  const{setEditor } =useEditorStore();
   const editor = useEditor({
+    onCreate({editor}) {
+        setEditor(editor);
+    },
+    onDestroy(){
+      setEditor(null);
+    },
+    onUpdate(editor){
+      setEditor(editor);
+
+    },
     editorProps: {
       attributes: {
         
