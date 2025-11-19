@@ -14,11 +14,12 @@ import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
 import TextAlign from '@tiptap/extension-text-align';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
-import { useEditorStore } from '@/store/use-editor-store';
+import { useEditorStore } from '@/store/use-editor-store'
 
 export const Editor = () => {
 
   const{setEditor } =useEditorStore();
+  
   const editor = useEditor({
     onCreate({editor}) {
         setEditor(editor);
@@ -26,9 +27,23 @@ export const Editor = () => {
     onDestroy(){
       setEditor(null);
     },
-    onUpdate(editor){
+    onUpdate({editor}){
       setEditor(editor);
-
+    },
+    onSelectionUpdate({editor}){
+      setEditor(editor);
+    },
+    onTransaction({editor}){
+      setEditor(editor);
+    },
+    onFocus({editor}){
+      setEditor(editor);
+    },
+    onBlur({editor}){
+      setEditor(editor);
+    },
+    onContentError({editor}){
+      setEditor(editor);
     },
     editorProps: {
       attributes: {
@@ -74,5 +89,4 @@ export const Editor = () => {
     </div>
   );
 };
-
 

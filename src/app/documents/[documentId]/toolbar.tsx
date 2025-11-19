@@ -1,8 +1,9 @@
 "use client";
 
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useEditorStore } from "@/store/use-editor-store";
-import { LucideIcon, Undo2Icon } from "lucide-react";
+import { useEditorStore } from '@/store/use-editor-store';
+import { LucideIcon, Undo2Icon , Redo2Icon , PrinterIcon , SpellCheckIcon, BoldIcon, Bold, ItalicIcon, UnderlineIcon, MessageSquareCodeIcon, ListIcon, ListTodoIcon, RemoveFormattingIcon } from "lucide-react";
 
 interface ToolbarButtonProps {
   onClick?: () => void;
@@ -43,9 +44,68 @@ export const Toolbar = () => {
       {
         label: "Undo",
         icon: Undo2Icon,
-        onClick: () => editor?.chain().focus().undo().run(),
+        onClick: () => editor?.chain().focus().undo().run()
       },
+      {
+        label: "Redo",
+        icon: Redo2Icon,
+        onClick: () => editor?.chain().focus().redo().run()
+      },
+      {
+        label: "Print",
+        icon: PrinterIcon,
+        onClick: () => window.print()
+      },
+      {
+        label: "Spell Check",
+        icon: SpellCheckIcon,
+        onClick: () => {
+          const current =editor?.view.dom.getAttribute("SpellCheck");
+          editor?.view.dom.setAttribute("spellCheck  ",current === "false" ? "true" : "false")
+        }
+      },
+      
     ],
+    [
+      {
+        label: "Bold",
+        icon: BoldIcon,
+        isActive:editor?.isActive("bold"),
+        onClick: () => editor?.chain().focus().toggleBold().run()
+      },
+       {
+        label: "Italic",
+        icon: ItalicIcon,
+        isActive:editor?.isActive("italic"),
+        onClick: () => editor?.chain().focus().toggleItalic().run()
+      },
+       {
+        label: "Underline",
+        icon: UnderlineIcon,
+        isActive:editor?.isActive("underline"),
+        onClick: () => editor?.chain().focus().toggleUnderline().run()
+      },
+    
+    ],
+    [
+      {    label: "Comment",
+        icon: MessageSquareCodeIcon,
+        isActive:false, //Todo : have to enable this functionality
+        onClick: () => console.log("TODO: Comment")
+      },
+
+      {
+        label: "list todo",
+        icon: ListTodoIcon,
+        isActive:editor?.isActive("taskList"),
+        onClick: () => editor?.chain().focus().toggleTaskList().run()
+      },
+      {
+        label: "Remove Formatting",
+        icon: RemoveFormattingIcon,
+        onClick: () => editor?.chain().focus().unsetAllMarks().run()
+      },
+    ]
   ];
 
   return (
@@ -53,6 +113,31 @@ export const Toolbar = () => {
       {sections[0].map((item) => (
 <ToolbarButton key={item.label} { ... item}/>
       ))}
+      <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+      {/* font family*/}
+      <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+      {/* heading*/}
+      <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+      {/* font size*/}
+      <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+      {sections[1].map((item) => (
+<ToolbarButton key={item.label} { ... item}/>
+))}
+
+{/* TODO : text colour*/}
+{/* TODO : highlight colour*/}
+<Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+{/* TODO : link*/}
+{/* TODO : image*/}
+{/* TODO : aliignment*/}
+{/* TODO : line height*/}
+{/* TODO : list*/}
+
+ {sections[2].map((item) => (
+<ToolbarButton key={item.label} { ... item}/>
+))}
+
+
     </div>
   );
 };
