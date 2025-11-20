@@ -6,6 +6,8 @@ import Tasklist from '@tiptap/extension-task-list';
 import Taskitem from '@tiptap/extension-task-item';
 import Table from '@tiptap/extension-table';
 import TableCell from '@tiptap/extension-table-cell';
+import FontFamily from '@tiptap/extension-font-family';
+import TextStyle from '@tiptap/extension-text-style';
 import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import Image from '@tiptap/extension-image';
@@ -55,6 +57,8 @@ export const Editor = () => {
     extensions: [
       StarterKit,
       Taskitem.configure({ nested: true }),
+      FontFamily,
+      TextStyle,
       Tasklist,
       Table,
       TableCell,

@@ -4,7 +4,35 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from '@/store/use-editor-store';
 import { LucideIcon, Undo2Icon , Redo2Icon , PrinterIcon , SpellCheckIcon, BoldIcon, Bold, ItalicIcon, UnderlineIcon, MessageSquareCodeIcon, ListIcon, ListTodoIcon, RemoveFormattingIcon } from "lucide-react";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent,DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
+const FontFamilyButton =() =>{
+  const {editor} = useEditorStore();
+  
+  const fonts =[
+    {lable : "Arial" , value:"Arial"},
+    {lable : "Georgia" , value:"Georgia"},
+    {lable : "Veedana" , value:"Veedana"},
+    {lable : "Courier New" , value:"Courier New"},
+    {lable : "New Time Roman" , value:"New Time Roman"},
+    
+  ];
+
+  return(
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+
+        <button className=
+          "h-7 w-[120px] shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm, "
+>
+          <span className="truncate"></span>
+        </button>
+
+      </DropdownMenuTrigger>
+    </DropdownMenu>
+  )
+}
 interface ToolbarButtonProps {
   onClick?: () => void;
   isActive?: boolean;
@@ -114,6 +142,7 @@ export const Toolbar = () => {
 <ToolbarButton key={item.label} { ... item}/>
       ))}
       <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
+
       {/* font family*/}
       <Separator orientation="vertical" className="h-6 bg-neutral-300"/>
       {/* heading*/}
