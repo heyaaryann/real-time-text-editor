@@ -10,7 +10,9 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   return (
     <div className="min-h-screen bg-[#FAFBFD]">
-      <Toolbar />
+      <div className="print:hidden">
+        <Toolbar />
+      </div>
       <Editor />
     </div>
   );
