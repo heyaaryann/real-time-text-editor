@@ -10,7 +10,6 @@ import {
   PrinterIcon,
   SpellCheckIcon,
   BoldIcon,
-  Bold,
   ItalicIcon,
   UnderlineIcon,
   MessageSquareCodeIcon,
