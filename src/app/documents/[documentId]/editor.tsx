@@ -16,46 +16,78 @@ import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
 import TextAlign from '@tiptap/extension-text-align';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
-import { useEditorStore } from '@/store/use-editor-store'
+import Link from '@tiptap/extension-link';
+import { Color } from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import { useEditorStore } from '@/store/use-editor-store';
+import { LineHeightExtension } from '@/extensions/line-height';
+import { FontSizeExtension } from '@/extensions/font-size';
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import * as Y from 'yjs';
+import { LiveblocksYjsProvider } from '@liveblocks/yjs';
+import { useRoom, useSelf } from '@/liveblocks.config';
+import { useEffect, useState } from 'react';
 
 export const Editor = () => {
+  const room = useRoom();
+  const [doc, setDoc] = useState<Y.Doc>();
+  const [provider, setProvider] = useState<LiveblocksYjsProvider>();
+  const currentUser = useSelf();
 
-  const{setEditor } =useEditorStore();
-  
+  const { setEditor } = useEditorStore();
+
+  // Initialize Yjs document and provider
+  useEffect(() => {
+    const yDoc = new Y.Doc();
+    const yProvider = new LiveblocksYjsProvider(room as any, yDoc);
+    setDoc(yDoc);
+    setProvider(yProvider);
+
+    return () => {
+      yDoc?.destroy();
+      yProvider?.destroy();
+    };
+  }, [room]);
+
   const editor = useEditor({
-    onCreate({editor}) {
-        setEditor(editor);
+    immediatelyRender: false,
+    onCreate({ editor }) {
+      setEditor(editor);
     },
-    onDestroy(){
+    onDestroy() {
       setEditor(null);
     },
-    onUpdate({editor}){
+    onUpdate({ editor }) {
       setEditor(editor);
     },
-    onSelectionUpdate({editor}){
+    onSelectionUpdate({ editor }) {
       setEditor(editor);
     },
-    onTransaction({editor}){
+    onTransaction({ editor }) {
       setEditor(editor);
     },
-    onFocus({editor}){
+    onFocus({ editor }) {
       setEditor(editor);
     },
-    onBlur({editor}){
+    onBlur({ editor }) {
       setEditor(editor);
     },
-    onContentError({editor}){
+    onContentError({ editor }) {
       setEditor(editor);
     },
     editorProps: {
       attributes: {
-        
+
         style: "padding-left:56px; padding-right:56px;",
         class: "tiptap focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Disable history extension as Yjs handles undo/redo
+        history: false,
+      }),
       Taskitem.configure({ nested: true }),
       FontFamily,
       TextStyle,
@@ -68,17 +100,41 @@ export const Editor = () => {
       ImageResize,
       Underline,
       Strike,
-  
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+      }),
+      Color,
+      Highlight.configure({ multicolor: true }),
+
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       HorizontalRule,
-      
+      LineHeightExtension.configure({
+        types: ["heading", "paragraph"],
+        defaultLineHeight: "normal",
+      }),
+      FontSizeExtension,
+      // Collaboration extensions
+      ...(doc && provider ? [
+        Collaboration.configure({
+          document: doc,
+        }),
+        CollaborationCursor.configure({
+          provider: provider,
+          user: {
+            name: currentUser?.presence?.name || 'Anonymous',
+            color: currentUser?.presence?.color || '#000000',
+          },
+        }),
+      ] : []),
     ],
-    content: 
+    content:
       `
       hello everyone
       `,
-      
-  });
+
+  }, [doc, provider, currentUser]);
 
   if (!editor) return null;
 

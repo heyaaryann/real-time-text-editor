@@ -2,6 +2,8 @@
 
 import { Editor } from "./editor";
 import { Toolbar } from "./toolbar";
+import { DocumentHeader } from "./document-header";
+import { CollaborativeRoom } from "@/components/collaborative-room";
 
 interface DocumentIdPageProps {
   params: { documentId: string };
@@ -9,10 +11,13 @@ interface DocumentIdPageProps {
 
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   return (
-    <div className="min-h-screen bg-[#FAFBFD]">
-      <Toolbar />
-      <Editor />
-    </div>
+    <CollaborativeRoom roomId={params.documentId}>
+      <div className="min-h-screen bg-[#FAFBFD]">
+        <DocumentHeader />
+        <Toolbar />
+        <Editor />
+      </div>
+    </CollaborativeRoom>
   );
 };
 
