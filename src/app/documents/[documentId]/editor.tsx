@@ -25,30 +25,35 @@ import { FontSizeExtension } from '@/extensions/font-size';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import * as Y from 'yjs';
-import { LiveblocksYjsProvider } from '@liveblocks/yjs';
-import { useRoom, useSelf } from '@/liveblocks.config';
+import { HocuspocusProvider } from '@hocuspocus/provider';
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 
 export const Editor = () => {
-  const room = useRoom();
-  const [doc, setDoc] = useState<Y.Doc>();
-  const [provider, setProvider] = useState<LiveblocksYjsProvider>();
-  const currentUser = useSelf();
+  const params = useParams();
+  const documentId = params?.documentId as string;
+  const [provider, setProvider] = useState<HocuspocusProvider | null>(null);
 
   const { setEditor } = useEditorStore();
 
-  // Initialize Yjs document and provider
+  // Initialize Yjs document and Hocuspocus provider
   useEffect(() => {
+    if (!documentId) return;
+
     const yDoc = new Y.Doc();
-    const yProvider = new LiveblocksYjsProvider(room as any, yDoc);
-    setDoc(yDoc);
+    const yProvider = new HocuspocusProvider({
+      url: 'ws://localhost:1234',
+      name: documentId,
+      document: yDoc,
+    });
+
     setProvider(yProvider);
 
     return () => {
-      yDoc?.destroy();
       yProvider?.destroy();
+      yDoc?.destroy();
     };
-  }, [room]);
+  }, [documentId]);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -116,15 +121,15 @@ export const Editor = () => {
       }),
       FontSizeExtension,
       // Collaboration extensions
-      ...(doc && provider ? [
+      ...(provider ? [
         Collaboration.configure({
-          document: doc,
+          document: provider.document,
         }),
         CollaborationCursor.configure({
           provider: provider,
           user: {
-            name: currentUser?.presence?.name || 'Anonymous',
-            color: currentUser?.presence?.color || '#000000',
+            name: `User ${Math.floor(Math.random() * 1000)}`,
+            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
           },
         }),
       ] : []),
@@ -134,7 +139,7 @@ export const Editor = () => {
       hello everyone
       `,
 
-  }, [doc, provider, currentUser]);
+  }, [provider]);
 
   if (!editor) return null;
 
