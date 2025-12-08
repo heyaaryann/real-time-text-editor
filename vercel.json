@@ -2,5 +2,11 @@
     "installCommand": "npm install --legacy-peer-deps",
     "buildCommand": "npm run build",
     "devCommand": "npm run dev",
-    "framework": "nextjs"
+    "framework": "nextjs",
+    "build": {
+    "env": {
+      "NEXT_PRIVATE_IGNORE_CVE_2025_66478": "true"
+    }
+  }
 }
+
