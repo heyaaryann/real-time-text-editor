@@ -29,31 +29,13 @@ import { HocuspocusProvider } from '@hocuspocus/provider';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
-export const Editor = () => {
-  const params = useParams();
-  const documentId = params?.documentId as string;
-  const [provider, setProvider] = useState<HocuspocusProvider | null>(null);
+type EditorProps = {
+  provider: HocuspocusProvider;
+  documentId: string;
+};
 
+const EditorContent_Internal = ({ provider, documentId }: EditorProps) => {
   const { setEditor } = useEditorStore();
-
-  // Initialize Yjs document and Hocuspocus provider
-  useEffect(() => {
-    if (!documentId) return;
-
-    const yDoc = new Y.Doc();
-    const yProvider = new HocuspocusProvider({
-      url: process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:1234',
-      name: documentId,
-      document: yDoc,
-    });
-
-    setProvider(yProvider);
-
-    return () => {
-      yProvider?.destroy();
-      yDoc?.destroy();
-    };
-  }, [documentId]);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -64,18 +46,31 @@ export const Editor = () => {
       setEditor(null);
     },
     onUpdate({ editor }) {
-      setEditor(editor);
+      // Editor state is handled locally by components subscribing to events
+    },
+    onSelectionUpdate({ editor }) {
+      // Editor state is handled locally by components subscribing to events
+    },
+    onTransaction({ editor }) {
+      // Editor state is handled locally by components subscribing to events
+    },
+    onFocus({ editor }) {
+      // Editor state is handled locally by components subscribing to events
+    },
+    onBlur({ editor }) {
+      // Editor state is handled locally by components subscribing to events
+    },
+    onContentError({ editor }) {
+      // Editor state is handled locally by components subscribing to events
     },
     editorProps: {
       attributes: {
-
         style: "padding-left:56px; padding-right:56px;",
         class: "tiptap focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },
     },
     extensions: [
       StarterKit.configure({
-        // Disable history extension as Yjs handles undo/redo
         history: false,
       }),
       Taskitem.configure({ nested: true }),
@@ -97,7 +92,6 @@ export const Editor = () => {
       }),
       Color,
       Highlight.configure({ multicolor: true }),
-
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       HorizontalRule,
       LineHeightExtension.configure({
@@ -105,24 +99,18 @@ export const Editor = () => {
         defaultLineHeight: "normal",
       }),
       FontSizeExtension,
-      // Collaboration extensions
-      ...(provider ? [
-        Collaboration.configure({
-          document: provider.document,
-        }),
-        CollaborationCursor.configure({
-          provider: provider,
-          user: {
-            name: `User ${Math.floor(Math.random() * 1000)}`,
-            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          },
-        }),
-      ] : []),
+      Collaboration.configure({
+        document: provider.document,
+      }),
+      CollaborationCursor.configure({
+        provider: provider,
+        user: {
+          name: `User ${Math.floor(Math.random() * 1000)}`,
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        },
+      }),
     ],
-    content: `
-      hello everyone
-    `,
-  }, [provider]);
+  });
 
   // Handle initial content from file upload
   useEffect(() => {
@@ -141,39 +129,26 @@ export const Editor = () => {
         }
       };
 
-      if (provider) {
-        console.log("Provider available, synced:", provider.synced);
-
-        if (provider.synced) {
-          loadInitialContent();
-        } else {
-          const handleSynced = () => {
-            console.log("Provider synced event fired");
-            loadInitialContent();
-          };
-
-          provider.on('synced', handleSynced);
-
-          // Fallback: Load content after 2 seconds even if not synced
-          const timeoutId = setTimeout(() => {
-            console.log("Timeout reached, loading content anyway");
-            loadInitialContent();
-          }, 2000);
-
-          return () => {
-            provider.off('synced', handleSynced);
-            clearTimeout(timeoutId);
-          };
-        }
+      if (provider.synced) {
+        loadInitialContent();
       } else {
-        // No provider yet, try loading after a short delay
-        console.log("No provider yet, setting timeout");
-        const timeoutId = setTimeout(() => {
-          console.log("Timeout: attempting to load content without provider");
+        const handleSynced = () => {
+          console.log("Provider synced event fired");
           loadInitialContent();
-        }, 1000);
+        };
 
-        return () => clearTimeout(timeoutId);
+        provider.on('synced', handleSynced);
+
+        // Fallback: Load content after 2 seconds even if not synced
+        const timeoutId = setTimeout(() => {
+          console.log("Timeout reached, loading content anyway");
+          loadInitialContent();
+        }, 2000);
+
+        return () => {
+          provider.off('synced', handleSynced);
+          clearTimeout(timeoutId);
+        };
       }
     }
   }, [editor, documentId, provider]);
@@ -182,7 +157,6 @@ export const Editor = () => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      {/* Editor Area */}
       <main className="size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible]">
         <div className='min-w-max justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0'>
           <EditorContent editor={editor} />
@@ -190,5 +164,39 @@ export const Editor = () => {
       </main>
     </div>
   );
+};
+
+export const Editor = () => {
+  const params = useParams();
+  const documentId = params?.documentId as string;
+  const [provider, setProvider] = useState<HocuspocusProvider | null>(null);
+
+  useEffect(() => {
+    if (!documentId) return;
+
+    const yDoc = new Y.Doc();
+    const yProvider = new HocuspocusProvider({
+      url: process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:1234',
+      name: documentId,
+      document: yDoc,
+    });
+
+    setProvider(yProvider);
+
+    return () => {
+      yProvider?.destroy();
+      yDoc?.destroy();
+    };
+  }, [documentId]);
+
+  if (!provider || !documentId) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  return <EditorContent_Internal provider={provider} documentId={documentId} />;
 };
 

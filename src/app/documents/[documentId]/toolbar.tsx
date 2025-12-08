@@ -33,7 +33,7 @@ import {
   CodeIcon,
   TableIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Value } from "@radix-ui/react-select";
 import {
@@ -589,8 +589,27 @@ const ToolbarButton = ({
 };
 
 export const Toolbar = () => {
-
   const { editor } = useEditorStore();
+  const [_, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleUpdate = () => {
+      forceUpdate((prev) => prev + 1);
+    };
+
+    editor.on("transaction", handleUpdate);
+    editor.on("selectionUpdate", handleUpdate);
+    editor.on("update", handleUpdate);
+
+    return () => {
+      editor.off("transaction", handleUpdate);
+      editor.off("selectionUpdate", handleUpdate);
+      editor.off("update", handleUpdate);
+    };
+  }, [editor]);
+
   console.log("Toolbar editor : ", { editor });
   const sections: {
     label: string;
