@@ -42,7 +42,7 @@ export const Editor = () => {
 
     const yDoc = new Y.Doc();
     const yProvider = new HocuspocusProvider({
-      url: 'ws://localhost:1234',
+      url: process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:1234',
       name: documentId,
       document: yDoc,
     });
@@ -64,21 +64,6 @@ export const Editor = () => {
       setEditor(null);
     },
     onUpdate({ editor }) {
-      setEditor(editor);
-    },
-    onSelectionUpdate({ editor }) {
-      setEditor(editor);
-    },
-    onTransaction({ editor }) {
-      setEditor(editor);
-    },
-    onFocus({ editor }) {
-      setEditor(editor);
-    },
-    onBlur({ editor }) {
-      setEditor(editor);
-    },
-    onContentError({ editor }) {
       setEditor(editor);
     },
     editorProps: {
@@ -134,12 +119,64 @@ export const Editor = () => {
         }),
       ] : []),
     ],
-    content:
-      `
+    content: `
       hello everyone
-      `,
-
+    `,
   }, [provider]);
+
+  // Handle initial content from file upload
+  useEffect(() => {
+    if (editor && documentId) {
+      console.log("Editor and documentId available, checking for initial content...");
+
+      const loadInitialContent = () => {
+        const initialContent = localStorage.getItem(`document-${documentId}-initial`);
+        console.log("Initial content check:", initialContent ? `Found (${initialContent.length} chars)` : "Not found");
+
+        if (initialContent) {
+          console.log("Setting initial content to editor");
+          editor.commands.setContent(initialContent);
+          localStorage.removeItem(`document-${documentId}-initial`);
+          console.log("Initial content set and localStorage cleared");
+        }
+      };
+
+      if (provider) {
+        console.log("Provider available, synced:", provider.synced);
+
+        if (provider.synced) {
+          loadInitialContent();
+        } else {
+          const handleSynced = () => {
+            console.log("Provider synced event fired");
+            loadInitialContent();
+          };
+
+          provider.on('synced', handleSynced);
+
+          // Fallback: Load content after 2 seconds even if not synced
+          const timeoutId = setTimeout(() => {
+            console.log("Timeout reached, loading content anyway");
+            loadInitialContent();
+          }, 2000);
+
+          return () => {
+            provider.off('synced', handleSynced);
+            clearTimeout(timeoutId);
+          };
+        }
+      } else {
+        // No provider yet, try loading after a short delay
+        console.log("No provider yet, setting timeout");
+        const timeoutId = setTimeout(() => {
+          console.log("Timeout: attempting to load content without provider");
+          loadInitialContent();
+        }, 1000);
+
+        return () => clearTimeout(timeoutId);
+      }
+    }
+  }, [editor, documentId, provider]);
 
   if (!editor) return null;
 
