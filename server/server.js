@@ -1,7 +1,7 @@
 import { Server } from '@hocuspocus/server';
 
 const server = Server.configure({
-    port: 1234,
+    port: process.env.PORT ? Number(process.env.PORT) : 1234,
 
     onConnect: (data) => {
         console.log(`Client connected: ${data.documentName}`);
