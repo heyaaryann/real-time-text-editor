@@ -32,9 +32,11 @@ import { useParams } from 'next/navigation';
 type EditorProps = {
   provider: HocuspocusProvider;
   documentId: string;
+  userName?: string;
+  userColor?: string;
 };
 
-const EditorContent_Internal = ({ provider, documentId }: EditorProps) => {
+const EditorContent_Internal = ({ provider, documentId, userName, userColor }: EditorProps) => {
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
@@ -105,8 +107,8 @@ const EditorContent_Internal = ({ provider, documentId }: EditorProps) => {
       CollaborationCursor.configure({
         provider: provider,
         user: {
-          name: `User ${Math.floor(Math.random() * 1000)}`,
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          name: userName || `Anonymous User`,
+          color: userColor || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
         },
       }),
     ],
@@ -166,7 +168,7 @@ const EditorContent_Internal = ({ provider, documentId }: EditorProps) => {
   );
 };
 
-export const Editor = () => {
+export const Editor = ({ userName, userColor }: { userName?: string; userColor?: string }) => {
   const params = useParams();
   const documentId = params?.documentId as string;
   const [provider, setProvider] = useState<HocuspocusProvider | null>(null);
@@ -197,6 +199,5 @@ export const Editor = () => {
     );
   }
 
-  return <EditorContent_Internal provider={provider} documentId={documentId} />;
+  return <EditorContent_Internal provider={provider} documentId={documentId} userName={userName} userColor={userColor} />;
 };
-

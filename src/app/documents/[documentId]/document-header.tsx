@@ -2,7 +2,7 @@
 
 import { useEditorStore } from "@/store/use-editor-store";
 import { useState, useEffect } from "react";
-import { Download, FileText, FileCode, FileType } from "lucide-react";
+import { Download, FileText, FileCode, FileType, Share2 } from "lucide-react";
 import {
     downloadAsPDF,
     downloadAsDOCX,
@@ -16,13 +16,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { ShareDialog } from "@/components/share-dialog";
+import { Button } from "@/components/ui/button";
 
-export const DocumentHeader = () => {
+export const DocumentHeader = ({ documentId }: { documentId: string }) => {
     const { editor } = useEditorStore();
     const [title, setTitle] = useState("Untitled Document");
     const [wordCount, setWordCount] = useState(0);
     const [charCount, setCharCount] = useState(0);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [showShareDialog, setShowShareDialog] = useState(false);
+
 
     useEffect(() => {
         if (!editor) return;
@@ -104,55 +108,73 @@ export const DocumentHeader = () => {
                 </div>
             </div>
 
-            {/* Download Button */}
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <button
-                        disabled={isDownloading}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <Download className="size-4" />
-                        <span>{isDownloading ? "Downloading..." : "Download"}</span>
-                    </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-48 p-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-2">
-                    <DropdownMenuItem
-                        onClick={() => handleDownload("pdf")}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
-                    >
-                        <FileText className="size-4 text-red-600" />
-                        <span className="text-sm font-medium">PDF</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => handleDownload("docx")}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
-                    >
-                        <FileText className="size-4 text-blue-600" />
-                        <span className="text-sm font-medium">DOCX</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => handleDownload("txt")}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
-                    >
-                        <FileType className="size-4 text-gray-600" />
-                        <span className="text-sm font-medium">TXT</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => handleDownload("markdown")}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
-                    >
-                        <FileCode className="size-4 text-purple-600" />
-                        <span className="text-sm font-medium">Markdown</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => handleDownload("html")}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
-                    >
-                        <FileCode className="size-4 text-orange-600" />
-                        <span className="text-sm font-medium">HTML</span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Share and Download Buttons */}
+            <div className="flex gap-2">
+                <Button
+                    onClick={() => setShowShareDialog(true)}
+                    variant="outline"
+                    className="flex items-center gap-2 px-4 py-2"
+                >
+                    <Share2 className="size-4" />
+                    <span>Share</span>
+                </Button>
+
+                {/* Download Button */}
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button
+                            disabled={isDownloading}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Download className="size-4" />
+                            <span>{isDownloading ? "Downloading..." : "Download"}</span>
+                        </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-48 p-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-2">
+                        <DropdownMenuItem
+                            onClick={() => handleDownload("pdf")}
+                            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <FileText className="size-4 text-red-600" />
+                            <span className="text-sm font-medium">PDF</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => handleDownload("docx")}
+                            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <FileText className="size-4 text-blue-600" />
+                            <span className="text-sm font-medium">DOCX</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => handleDownload("txt")}
+                            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <FileType className="size-4 text-gray-600" />
+                            <span className="text-sm font-medium">TXT</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => handleDownload("markdown")}
+                            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <FileCode className="size-4 text-purple-600" />
+                            <span className="text-sm font-medium">Markdown</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => handleDownload("html")}
+                            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <FileCode className="size-4 text-orange-600" />
+                            <span className="text-sm font-medium">HTML</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+
+            <ShareDialog
+                documentId={documentId}
+                open={showShareDialog}
+                onOpenChange={setShowShareDialog}
+            />
         </div>
     );
 };

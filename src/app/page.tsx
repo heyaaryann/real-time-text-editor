@@ -6,6 +6,8 @@ import { useState } from "react";
 import mammoth from "mammoth";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { LoginButton } from "@/components/auth/login-button";
+
 
 export default function Home() {
   const router = useRouter();
@@ -70,9 +72,7 @@ export default function Home() {
           <span className="text-xl font-bold text-slate-800">Docs Editor</span>
         </div>
         <div className="flex gap-4">
-          <Link href="/documents/new" className="text-slate-600 hover:text-slate-900 font-medium px-4 py-2">
-            Log In
-          </Link>
+          <LoginButton />
           <button
             onClick={createNewDocument}
             className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors"
