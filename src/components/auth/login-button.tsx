@@ -31,8 +31,7 @@ export function LoginButton() {
             <>
                 <Button
                     onClick={() => setShowLoginModal(true)}
-                    variant="ghost"
-                    className="text-slate-600 hover:text-slate-900 font-medium px-4 py-2"
+                    className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors shadow-sm"
                 >
                     Log In
                 </Button>

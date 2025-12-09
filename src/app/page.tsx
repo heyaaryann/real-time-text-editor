@@ -73,12 +73,6 @@ export default function Home() {
         </div>
         <div className="flex gap-4">
           <LoginButton />
-          <button
-            onClick={createNewDocument}
-            className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors"
-          >
-            Get Started
-          </button>
         </div>
       </nav>
 
@@ -86,7 +80,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-6 pt-20 pb-32">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
-            The Professional <span className="text-blue-600">Real-Time</span> Text Editor
+            <span className="text-blue-600">Real-Time</span> Text Editor
           </h1>
           <p className="text-xl text-slate-600 mb-10 leading-relaxed">
             Experience seamless collaboration with our advanced document editor.
