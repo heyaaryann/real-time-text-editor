@@ -1,6 +1,6 @@
 import { Server } from '@hocuspocus/server';
 
-const server = Server.configure({
+const server = new Server({
     port: process.env.PORT ? Number(process.env.PORT) : 1234,
 
     onConnect: (data) => {
